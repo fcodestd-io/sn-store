@@ -31,14 +31,23 @@ Import repo di Vercel (framework SvelteKit terdeteksi otomatis; build: `pnpm bui
 Versi Node ditetapkan di `vite.config.ts` (`runtime: 'nodejs24.x'`), jadi build tidak bergantung pada versi Node
 yang dipilih Vercel (mendukung Node 22/24/26 di mesin build). Jangan menambahkan `engines` di `package.json`. Catat domainnya, mis. `https://sn-store.vercel.app`.
 
-## 4. Daftarkan webhook Telegram (sekali)
-Dari komputer lokal, dengan `.env` berisi token dan `TELEGRAM_WEBHOOK_SECRET` yang SAMA dengan di Vercel:
+## 4. Webhook Telegram (otomatis)
+Setiap deploy **Production** menjalankan `vercel-build` (`vite build` lalu `scripts/register-webhook.mjs`) yang
+otomatis memanggil `setWebhook` ke `https://<domain-production>/api/telegram/webhook`. Syarat: `TELEGRAM_BOT_TOKEN`
+dan `TELEGRAM_WEBHOOK_SECRET` sudah diisi di Vercel untuk environment **Production**. Biarkan *Build Command*
+di Project Settings kosong (default) agar `vercel-build` dipakai. Cek di log build: `[webhook] terdaftar: ...`.
+
+Jaring pengaman: cron harian (`/api/cron/sync`) memeriksa webhook dan mendaftarkannya lagi bila terhapus.
+
+Manual (opsional), dari komputer lokal dengan `.env` yang `TELEGRAM_WEBHOOK_SECRET`-nya SAMA dengan Vercel:
 ```
 pnpm bot:webhook https://sn-store.vercel.app
 pnpm bot:webhook --info     # cek status
 ```
-> Webhook dan polling tidak bisa aktif bersamaan. Menjalankan `pnpm bot:dev` otomatis menghapus webhook;
-> daftarkan ulang dengan perintah di atas setelah selesai.
+> Webhook dan polling tidak bisa aktif bersamaan. Menjalankan `pnpm bot:dev` otomatis menghapus webhook, dan
+> selama polling lokal berjalan, cron/deploy yang mendaftarkan webhook lagi akan membuat polling berhenti (409).
+> Saran: pakai **bot kedua dari BotFather** (token berbeda) di `.env` lokal untuk pengembangan, supaya bot
+> production di Vercel tidak terganggu.
 
 ## 5. Webhook Midtrans
 Dashboard Midtrans **Sandbox** → Settings → Configuration → **Payment Notification URL**:

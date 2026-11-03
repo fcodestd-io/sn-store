@@ -23,5 +23,9 @@ export const GET: RequestHandler = async ({ request }) => {
 
 	const { runScheduledJobs } = await import('#telegram/jobs.ts');
 
-	return json({ jobs: await runScheduledJobs() });
+	// Di production Vercel, cron sekaligus memastikan webhook Telegram tetap terdaftar.
+	const webhookHost =
+		process.env.VERCEL_ENV === 'production' ? process.env.VERCEL_PROJECT_PRODUCTION_URL : undefined;
+
+	return json({ jobs: await runScheduledJobs(webhookHost) });
 };
