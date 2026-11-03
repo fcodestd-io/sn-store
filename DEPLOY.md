@@ -21,8 +21,15 @@ Project Settings → Environment Variables (lihat `.env.example`):
 | `TELEGRAM_WEBHOOK_SECRET` | acak 16-64 karakter (huruf/angka/`_`/`-`) |
 | `CRON_SECRET` | acak panjang; melindungi `/api/cron/sync` |
 
+> **Penting:** semua variabel di atas (kecuali `TELEGRAM_WEBHOOK_SECRET` dan `CRON_SECRET`, yang opsional saat build)
+> harus sudah diisi **sebelum** deploy. Jika ada yang kosong, build berhenti dengan pesan `env_invalid`
+> beserta daftar variabel yang belum ada. Isi lalu klik Redeploy.
+> Pastikan variabel dicentang untuk environment **Production** (dan Preview bila dipakai).
+
 ## 3. Deploy
-Import repo di Vercel (framework SvelteKit terdeteksi otomatis; build: `pnpm build`). Catat domainnya, mis. `https://sn-store.vercel.app`.
+Import repo di Vercel (framework SvelteKit terdeteksi otomatis; build: `pnpm build`).
+Versi Node ditetapkan di `vite.config.ts` (`runtime: 'nodejs24.x'`), jadi build tidak bergantung pada versi Node
+yang dipilih Vercel (mendukung Node 22/24/26 di mesin build). Jangan menambahkan `engines` di `package.json`. Catat domainnya, mis. `https://sn-store.vercel.app`.
 
 ## 4. Daftarkan webhook Telegram (sekali)
 Dari komputer lokal, dengan `.env` berisi token dan `TELEGRAM_WEBHOOK_SECRET` yang SAMA dengan di Vercel:

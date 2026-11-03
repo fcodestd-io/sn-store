@@ -12,7 +12,9 @@ export default defineConfig({
 			},
 
 			// Deploy ke Vercel. Bot Telegram berjalan sebagai webhook (src/routes/api/telegram).
-			adapter: adapter()
+			// Runtime ditetapkan eksplisit agar build tidak gagal bila Node di mesin build
+			// bukan 22/24 (adapter hanya mendukung keduanya).
+			adapter: adapter({ runtime: 'nodejs24.x' })
 		})
 	]
 });
