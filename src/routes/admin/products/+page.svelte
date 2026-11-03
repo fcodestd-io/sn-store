@@ -1,9 +1,17 @@
-
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import type { PageProps } from './$types';
 
 	let { data, form }: PageProps = $props();
+
+	type CategoryRelation = { name: string } | { name: string }[] | null | undefined;
+
+	/** Relasi many-to-one bertipe array pada tipe otomatis Supabase, tetapi berupa objek saat runtime. */
+	function categoryName(relation: CategoryRelation): string {
+		const category = Array.isArray(relation) ? relation[0] : relation;
+
+		return category?.name ?? 'Tanpa kategori';
+	}
 
 	let editingId = $state<string | null>(null);
 	let createPreview = $state<string | null>(null);
@@ -95,12 +103,7 @@
 		</div>
 	</div>
 
-	<form
-		method="POST"
-		action="?/create"
-		enctype="multipart/form-data"
-		class="form"
-	>
+	<form method="POST" action="?/create" enctype="multipart/form-data" class="form">
 		<label for="new-name">Nama produk <span>*</span></label>
 		<input
 			id="new-name"
@@ -162,7 +165,9 @@
 			</div>
 		</div>
 
-		<label for="new-image">Gambar produk <small>Opsional · JPEG, PNG, WebP · Maks. 2 MB</small></label>
+		<label for="new-image"
+			>Gambar produk <small>Opsional · JPEG, PNG, WebP · Maks. 2 MB</small></label
+		>
 		<input
 			class="file-input"
 			id="new-image"
@@ -202,8 +207,7 @@
 			id="new-description"
 			name="description"
 			rows="3"
-			placeholder="Jelaskan fitur, masa aktif, ketentuan, dan informasi produk..."
-		></textarea>
+			placeholder="Jelaskan fitur, masa aktif, ketentuan, dan informasi produk..."></textarea>
 
 		<button class="primary-button" type="submit">
 			<span>＋</span> Simpan produk
@@ -354,32 +358,18 @@
 							/>
 
 							<label for={`description-${product.id}`}>Deskripsi</label>
-							<textarea
-								id={`description-${product.id}`}
-								name="description"
-								rows="3"
-							>{product.description ?? ''}</textarea>
+							<textarea id={`description-${product.id}`} name="description" rows="3"
+								>{product.description ?? ''}</textarea
+							>
 
 							<label class="checkbox-row">
-								<input
-									type="checkbox"
-									name="is_active"
-									checked={product.is_active}
-								/>
+								<input type="checkbox" name="is_active" checked={product.is_active} />
 								<span>Produk aktif dan dapat ditampilkan di katalog publik</span>
 							</label>
 
 							<div class="button-row">
-								<button class="primary-button" type="submit">
-									Simpan perubahan
-								</button>
-								<button
-									class="secondary-button"
-									type="button"
-									onclick={cancelEdit}
-								>
-									Batal
-								</button>
+								<button class="primary-button" type="submit"> Simpan perubahan </button>
+								<button class="secondary-button" type="button" onclick={cancelEdit}> Batal </button>
 							</div>
 						</form>
 					{:else}
@@ -407,7 +397,7 @@
 						<div class="product-info">
 							<div class="product-category">
 								<span class="category-dot"></span>
-								{product.categories?.name ?? 'Tanpa kategori'}
+								{categoryName(product.categories)}
 							</div>
 
 							<h3>{product.name}</h3>
@@ -453,17 +443,15 @@
 								method="POST"
 								action="?/delete"
 								onsubmit={(event) => {
-									if (!confirm(`Hapus produk "${product.name}"? Tindakan ini tidak dapat dibatalkan.`)) {
+									if (
+										!confirm(`Hapus produk "${product.name}"? Tindakan ini tidak dapat dibatalkan.`)
+									) {
 										event.preventDefault();
 									}
 								}}
 							>
 								<input type="hidden" name="id" value={product.id} />
-								<button
-									class="danger-button"
-									type="submit"
-									aria-label={`Hapus ${product.name}`}
-								>
+								<button class="danger-button" type="submit" aria-label={`Hapus ${product.name}`}>
 									Hapus
 								</button>
 							</form>
@@ -804,8 +792,7 @@
 		height: 165px;
 		overflow: hidden;
 		background:
-			radial-gradient(ellipse at 50% 10%, rgb(56 189 248 / 15%), transparent 60%),
-			#15253b;
+			radial-gradient(ellipse at 50% 10%, rgb(56 189 248 / 15%), transparent 60%), #15253b;
 	}
 
 	.product-image {

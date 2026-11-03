@@ -87,13 +87,6 @@
 		</div>
 	</section>
 
-	{#if form?.success}
-		<div class="alert alert-success" role="status">
-			<span class="alert-icon">✓</span>
-			<span>{form.message || 'Perubahan berhasil disimpan.'}</span>
-		</div>
-	{/if}
-
 	{#if form?.error}
 		<div class="alert alert-error" role="alert">
 			<span class="alert-icon">!</span>
@@ -245,10 +238,11 @@
 
 							<div class="detail-item">
 								<span>Password login</span>
-								<strong>
-									{account.login_password ? '••••••••' : 'Belum diisi'}
+								<strong class="password-value">
+									{account.login_password ?? 'Belum diisi'}
 								</strong>
 							</div>
+							l
 
 							<div class="detail-item">
 								<span>Harga item</span>

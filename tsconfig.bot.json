@@ -1,0 +1,9 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"types": ["node"],
+		"lib": ["ESNext"]
+	},
+	"include": ["src/telegram", "src/lib/server", "src/lib/types", "src/types"],
+	"exclude": ["src/lib/server/**/*.svelte"]
+}

@@ -32,8 +32,8 @@ function parseAccount(formData: FormData) {
 		return { error: 'Status akun tidak valid.' } as const;
 	}
 
-	if (loginEmail.length > 255 || notes.length > 2000) {
-		return { error: 'Email atau catatan terlalu panjang.' } as const;
+	if (loginEmail.length > 255 || loginPassword.length > 1000 || notes.length > 2000) {
+		return { error: 'Email, password, atau catatan terlalu panjang.' } as const;
 	}
 
 	return {
@@ -66,7 +66,9 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
 	const { data: accounts, error: accountsError } = await locals.supabase
 		.from('product_accounts')
-		.select('id, product_id, name, login_email, price, status, notes, created_at, updated_at')
+		.select(
+			'id, product_id, name, login_email, login_password, price, status, notes, created_at, updated_at'
+		)
 		.eq('product_id', params.productId)
 		.order('created_at', { ascending: false });
 
@@ -93,7 +95,7 @@ export const actions: Actions = {
 		const insertData = {
 			...parsed.value,
 			product_id: params.productId,
-			...(parsed.loginPassword ? { login_password: parsed.loginPassword } : {})
+			login_password: parsed.loginPassword || null
 		};
 
 		const { error: insertError } = await locals.supabase

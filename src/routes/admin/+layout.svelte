@@ -53,6 +53,16 @@
 				<span class="nav-icon">↔</span>
 				<span>Pembayaran</span>
 			</a>
+
+			<div class="nav-divider"></div>
+
+			<div class="nav-group-label">AUTOMATION</div>
+
+			<a class="nav-link" href="/admin/telegram/commands">
+				<span class="nav-icon">✈</span>
+				<span>Telegram Bot</span>
+				<span class="nav-chevron">→</span>
+			</a>
 		</nav>
 
 		<div class="sidebar-bottom">
@@ -123,6 +133,11 @@
 			<span class="nav-symbol">↔</span>
 			<span>Bayar</span>
 		</a>
+
+		<a href="/admin/telegram/commands">
+			<span class="nav-symbol">✈</span>
+			<span>Telegram</span>
+		</a>
 	</nav>
 </div>
 
@@ -179,6 +194,7 @@
 		padding: 25px 17px 16px;
 		border-right: 1px solid #202c40;
 		background: #0d1525;
+		overflow-y: auto;
 	}
 
 	.brand {
@@ -222,7 +238,7 @@
 	}
 
 	.workspace-label {
-		margin: 43px 10px 13px;
+		margin: 36px 10px 13px;
 		color: #667891;
 		font-size: 9px;
 		font-weight: 850;
@@ -264,6 +280,36 @@
 		place-items: center;
 		color: #7ea4c9;
 		font-size: 21px;
+	}
+
+	.nav-divider {
+		height: 1px;
+		margin: 13px 8px 5px;
+		background: #243047;
+	}
+
+	.nav-group-label {
+		padding: 5px 10px 3px;
+		color: #667891;
+		font-size: 9px;
+		font-weight: 850;
+		letter-spacing: 1.5px;
+	}
+
+	.telegram-link {
+		border-color: #25425d;
+		background: linear-gradient(100deg, #142a40, #122238);
+		color: #d4efff;
+	}
+
+	.telegram-link .nav-icon,
+	.telegram-link .nav-chevron {
+		color: #7dd3fc;
+	}
+
+	.nav-chevron {
+		margin-left: auto;
+		font-size: 16px;
 	}
 
 	.sidebar-bottom {
@@ -326,12 +372,6 @@
 		margin-left: 248px;
 	}
 
-	.mobile-header,
-	.mobile-nav {
-		/* Pertahankan properti lainnya */
-		grid-template-columns: repeat(6, minmax(0, 1fr));
-	}
-
 	.main-content {
 		width: 100%;
 		max-width: 1500px;
@@ -353,6 +393,11 @@
 	.footer-dot {
 		padding: 0 4px;
 		color: #38bdf8;
+	}
+
+	.mobile-header,
+	.mobile-nav {
+		display: none;
 	}
 
 	@media (max-width: 800px) {
@@ -415,7 +460,7 @@
 			inset: auto 0 0;
 			z-index: 20;
 			display: grid;
-			grid-template-columns: repeat(3, minmax(0, 1fr));
+			grid-template-columns: repeat(4, minmax(0, 1fr));
 			padding: 8px 9px calc(8px + env(safe-area-inset-bottom));
 			border-top: 1px solid #29364b;
 			background: rgb(13 21 37 / 96%);
@@ -435,8 +480,9 @@
 			text-decoration: none;
 		}
 
-		.mobile-nav a:active {
-			background: #1b2b42;
+		.mobile-nav a:active,
+		.mobile-nav a.mobile-telegram {
+			background: #142a40;
 			color: #7dd3fc;
 		}
 
